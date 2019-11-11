@@ -61,29 +61,21 @@ bool checkColumnCompatibilty(List<List<int>> board) {
 }
 
 bool checkBoxesCompatibility(List<List<int>> board) {
-  for (int row = 0; row < board.length; row = row + 3) {
-    for (int col = 0; col < board.length; col = col + 3) {
-      if (!singleBoxCompatibility(board, row, col)) {
-        return false;
+  List finalList = [];
+  for (int row = 0; row < 9; row = row + 3) {
+    for (int col = 0; col < 9; col = col + 3) {
+      for (int finalListRow = row; finalListRow < row + 3; finalListRow++) {
+        for (int finalListCol = col; finalListCol < col + 3; finalListCol++) {
+          finalList.add(board[finalListRow][finalListCol]);
+        }
       }
+      return finalList.toSet().length == 9;
     }
+
   }
-  return true;
+
 }
 
-bool singleBoxCompatibility(List<List<int>> board, int boxRow, int boxCol){
-  List elements = [];
-
-  for (int row = boxRow; row < boxRow + 3; row++) {
-    for (int col = boxCol; col < boxCol + 3; col++) {
-      elements.add(board[row][col]);
-    }
-  }
-  if (elements.toSet().length != board.length) {
-    return false;
-  }
-  return true;
-}
 
 
 
