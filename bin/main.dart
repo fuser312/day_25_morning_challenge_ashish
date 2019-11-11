@@ -69,12 +69,14 @@ bool checkBlock(List<List<int>> board, int row, int col) {
   List<int> st = [];
   for (int i = 0; i < 3; i + 3) {
     for (int j = 0; j < 3; j + 3) {
-      int curr = board[i + row ][j + col ];
+      int curr = board[i + row][j + col];
       if (st.contains(curr)) {
         return false;
       } else {
         st.add(curr);
+        print(st);
       }
+
     }
   }
   return true;
@@ -86,16 +88,11 @@ bool sudokuValidator(List<List<int>> board) {
 
 bool isValidator(List<List<int>> board) {
   int n = 9;
-  int count = 0;
-  for (int row = 0; row < 9; row++) {
-    for (int col = 0; col < 9; col++) {
-      if (row % 3 == 0 && col % 3 == 0) {
-        if (checkBlock(board, row, col)) count++;
-      }
+  for (int row = 0; row < n; row++) {
+    for (int col = 0; col < n; col++) {
+      return checkBlock(board, row, col);
     }
   }
-  print('Block count $count');
-  return (count == 9);
 }
 
 // Challenge 3
