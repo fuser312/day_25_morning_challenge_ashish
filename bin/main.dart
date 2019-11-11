@@ -38,22 +38,31 @@ checkList(List<List<int>> board, int i) {
 }
 
 bool validInputs(List<List<int>> board) {
-  int count = 0;
   for (var x in board) {
-    for (int y in x) {
-      if (y > 0 && y < 10) count++;
-    }
+    x.every((number) => number > 0 && number < 10);
   }
-  return count == 9 * 9;
 }
 
-bool checkRow(List<List<int>> board, int row) {
-  return checkList(board, row);
+bool checkRow(List<List<int>> board) {
+  int count = 0;
+  for (int i = 0; i < 3; i + 3) {
+    if (checkList(board, i)) {
+      count++;
+    }
+  }
+  return count == 9;
   }
 
-bool checkCol(List<List<int>> board, int col) {
+bool checkCol(List<List<int>> board) {
   List transposed = transposeMatrix(board);
-  return checkList(board, col);
+  int count = 0;
+  for (int i = 0; i < 3; i + 3) {
+    if (checkList(transposed, i)) {
+      count++;
+    }
+  }
+  return count == 9;
+
 }
 
 bool checkBlock(List<List<int>> board, int row, int col) {
@@ -75,15 +84,15 @@ bool checkBlock(List<List<int>> board, int row, int col) {
 }
 
 bool isValid(List<List<int>> board, int row, int col) {
-  return checkRow(board, row) &&
-      checkCol(board, col) && checkBlock(board, row, col) && validInputs(board);
+  return checkRow(board) &&
+      checkCol(board);
 }
 
 bool sudokuValidator(List<List<int>> board) {
   int n = 9;
-  for (int i = 0; i < n; i++) {
-    for (int j = 0; j < n; j++) {
-      return !(!isValid(board, i, j));
+  for (int row = 0; row < n; row++) {
+    for (int col = 0; col < n; col++) {
+      return (isValid(board, row, col) && checkBlock(board, row, col));
       }
     }
 }
