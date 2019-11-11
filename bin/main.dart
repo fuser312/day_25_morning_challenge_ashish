@@ -21,79 +21,71 @@
 //  [ 8, 7, 3, 5, 1, 2, 9, 6, 4 ]
 
 //  ]) ➞ true
-transposeMatrix(List<List> matrix) {
-  List<List> transpose = List<List>();
-  for (int i = 0; i < matrix[0].length; i++) {
-    List newList = List();
-    matrix.forEach((list) => {newList.add(list[i])});
-    transpose.add(newList);
-  }
-  return transpose;
+
+bool sudokuValidator(List<List<int>> board) {
+  return checkRowCompatibility(board) && checkColumnCompatibilty(board) && checkBoxesCompatibility(board) && validInputs(board);
 }
 
-checkList(List<List<int>> board, int i) {
-  return !(board[i]
-      .toSet()
-      .length != 9);
-}
 
 bool validInputs(List<List<int>> board) {
   for (var x in board) {
     x.every((number) => number > 0 && number < 10);
+    return true;
   }
+  return false;
 }
 
-bool checkRow(List<List<int>> board) {
-  int count = 0;
-  for (List row in board) {
-    if (row
+bool checkRowCompatibility(List<List<int>> board) {
+  for (int row = 0; row < board.length; row++) {
+    if (board[row]
         .toSet()
-        .length == 9) count++;
+        .length != board.length) {
+      return false;
+    }
+
   }
-  return count == 9;
+  return true;
 }
 
-bool checkCol(List<List<int>> board) {
-  List transposed = transposeMatrix(board);
-  int count = 0;
-  for (List col in transposed) {
-    if (col
-        .toSet()
-        .length == 9) count++;
+bool checkColumnCompatibilty(List<List<int>> board) {
+  for (int col = 0; col < board.length; col++) {
+    List colElementsList = [];
+    for (int row = 0; row < board.length; row++) {
+      colElementsList.add(board[row][col]);
+    }
+    if (colElementsList.toSet().length != board.length) {
+      return false;
+    }
   }
-  return count == 9;
+  return true;
 }
 
-bool checkBlock(List<List<int>> board, int row, int col) {
-// Set to store characters seen so far.
-  List<int> st = [];
-  for (int i = 0; i < 3; i = i + 3) {
-    for (int j = 0; j < 3; j = j + 3) {
-      int curr = board[i + row ][j + col ];
-      if (st.contains(curr)) {
+bool checkBoxesCompatibility(List<List<int>> board) {
+  for (int row = 0; row < board.length; row = row + 3) {
+    for (int col = 0; col < board.length; col = col + 3) {
+      if (!singleBoxCompatibility(board, row, col)) {
         return false;
-      } else {
-        st.add(curr);
       }
     }
   }
   return true;
 }
 
-bool sudokuValidator(List<List<int>> board) {
-  return checkRow(board) && checkCol(board) && isValidator(board);
-}
+bool singleBoxCompatibility(List<List<int>> board, int boxRow, int boxCol){
+  List elements = [];
 
-bool isValidator(List<List<int>> board) {
-  int n = 9;
-  for (int row = 0; row < n; row++) {
-    for (int col = 0; col < n; col++) {
-      if (row % 3 == 0 && col % 3 == 0) {
-        return checkBlock(board, row, col);
-      }
+  for (int row = boxRow; row < boxRow + 3; row++) {
+    for (int col = boxCol; col < boxCol + 3; col++) {
+      elements.add(board[row][col]);
     }
   }
+  if (elements.toSet().length != board.length) {
+    return false;
+  }
+  return true;
 }
+
+
 
 // Challenge 3
 // Sort by Factor Length
